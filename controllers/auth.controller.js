@@ -55,10 +55,10 @@ const confirmUser = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    const isProd = process.env.NODE_ENV === "production";
+    const isProd = process.env.NODE_ENV !== "production";
     res.cookie("accessToken", token, {
       httpOnly: true,
-      secure: isProd,
+      secure: !isProd,
       sameSite: isProd ? "none" : "lax",
       maxAge: 60 * 60 * 1000, // 1 hour
     });
