@@ -24,12 +24,6 @@ const registerUser = async (req, res) => {
     });
     await form.save();
 
-    await activityLogger({
-      userId: form._id,
-      icon: "Users",
-      description: `New user signed up: ${firstname} ${lastname}`,
-    });
-
     res
       .status(201)
       .json({ status: true, message: "User registered successfully" });

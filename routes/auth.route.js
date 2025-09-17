@@ -10,9 +10,8 @@ const {
   resetPassword,
 } = require("../controllers/auth.controller");
 const auth = require("../middleware/auth");
-const { activityLogger } = require("../middleware/activityLogger");
 
-userRouter.post("/signup", registerUser, activityLogger);
+userRouter.post("/signup", registerUser);
 userRouter.post("/login", confirmUser);
 userRouter.post("/logout", auth, logoutUser);
 userRouter.get("/profile", auth, getProfile);
