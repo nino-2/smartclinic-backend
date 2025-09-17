@@ -58,11 +58,13 @@ const adminLogin = async (req, res) => {
       { expiresIn: "1d" }
     );
 
+    const isProd = process.env.NODE_ENV === "production";
     // ✅ Set cookie
     res.cookie("adminToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only secure in prod
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax", // must be "none" in prod to allow Vercel → Render
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     // success
