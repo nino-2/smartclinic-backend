@@ -58,3 +58,10 @@ app.listen(port, (err) => {
     console.log("server has started");
   }
 });
+
+app.get("/env-check", (req, res) => {
+  res.json({
+    NODE_ENV: process.env.NODE_ENV,
+    isProd: process.env.NODE_ENV === "production",
+  });
+});
