@@ -55,17 +55,11 @@ const confirmUser = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    const isProd = process.env.NODE_ENV === "production";
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
 
     return res.status(200).json({
       status: true,
       message: "User found",
+      token,
       user: {
         firstname: user.firstname,
         email: user.email,
@@ -81,18 +75,7 @@ const confirmUser = async (req, res) => {
 
 //logout
 const logoutUser = async (req, res) => {
-  try {
-    const isProd = process.env.NODE_ENV === "production";
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-    });
-    return res.status(200).json({ status: true, message: "Logged out" });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: false, message: "Server error" });
-  }
+  return res.status(200).json({ status: true, message: "Logged out" });
 };
 
 //Profile

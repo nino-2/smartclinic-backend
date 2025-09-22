@@ -58,19 +58,11 @@ const adminLogin = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    const isProd = process.env.NODE_ENV === "production";
-    // ✅ Set cookie
-    res.cookie("adminToken", token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax", // must be "none" in prod to allow Vercel → Render
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
     // success
     return res.status(200).json({
       status: true,
       message: "Admin login successful",
+      token,
       admin: {
         id: admin._id,
         username: admin.username,
@@ -85,19 +77,7 @@ const adminLogin = async (req, res) => {
 
 // Admin Logout
 const adminLogout = async (req, res) => {
-  try {
-    const isProd = process.env.NODE_ENV === "production";
-    // ✅ Set cookie
-    res.cookie("adminToken", {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax", // must be "none" in prod to allow Vercel → Render
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    return res.status(200).json({ message: "Logout successful" });
-  } catch (error) {
-    return res.status(500).json({ message: "Server error" });
-  }
+  return res.status(200).json({ message: "Logout successful" });
 };
 
 // Admin Dashboard

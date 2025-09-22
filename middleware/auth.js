@@ -1,29 +1,19 @@
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader && !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ status: false, message: "Access Denied" });
+  }
+
   try {
-    // First, check for Bearer token in header
-    const bearer = req.headers.authorization?.split(" ")[1];
-    // If not found, check for accessToken cookie
-    const token = bearer || req.cookies?.accessToken;
-
-    console.log("Incoming token:", token);
-
-    if (!token) {
-      return res.status(401).json({ status: false, message: "Access Denied" });
-    }
-
-    const secret = process.env.JWT_SECRET;
-    const decoded = jwt.verify(token, secret);
-
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (err) {
-    return res.status(401).json({
-      status: false,
-      message: "Invalid or expired token",
-      error: err.message,
-    });
+  } catch (error) {
+    return res.status(401).json({ status: false, message: "Invalid token" });
   }
 };
 

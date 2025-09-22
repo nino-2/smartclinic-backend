@@ -27,7 +27,6 @@ app.use(
         callback(new Error("CORS not allowed"), false);
       }
     },
-    credentials: true,
   })
 );
 
@@ -40,7 +39,6 @@ app.use("/appointment", appointmentRouter);
 app.use("/chat", chatRouter);
 app.use("/admin", adminRouter);
 
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
 let URI = process.env.MONGODB_URI;
 mongoose
   .connect(URI)

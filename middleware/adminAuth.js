@@ -1,12 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 const adminAuth = (req, res, next) => {
-  console.log("All cookies:", req.cookies);
-  const token = req.cookies?.adminToken;
-  console.log("AdminToken cookie:", token);
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   try {
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded admin token:", decoded);
     if (decoded.role !== "admin")

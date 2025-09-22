@@ -7,7 +7,6 @@ const {
 require("dotenv").config();
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-console.log("GOOGLE_API_KEY:", process.env.GOOGLE_API_KEY);
 
 const classifyModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const answerModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
