@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 
 const userRouter = require("./routes/auth.route");
 const appointmentRouter = require("./routes/appointment.route");
@@ -22,16 +21,17 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
+        callback(null, origin || allowedOrigins[0]);
       } else {
-        callback(new Error("CORS not allowed"), false);
+        callback(new Error("CORS not allowed"));
       }
     },
+    credentials: false,
   })
 );
 
 app.use(express.json());
-app.use(cookieParser());
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", userRouter);
