@@ -8,8 +8,12 @@ require("dotenv").config();
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-const classifyModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const answerModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const classifyModel = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
+});
+const answerModel = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
+});
 
 const SYSTEM_RULES = `
 You are a health information assistant for a campus clinic.

@@ -435,25 +435,6 @@ const deletePatient = async (req, res) => {
   }
 };
 
-// const uploadReport = async (req, res) => {
-//   try {
-//     const patient = await userModel.findById(req.params.id);
-//     if (!patient) return res.status(404).json({ message: "Patient not found" });
-
-//     // Save file info
-//     patient.reports = patient.reports || [];
-//     patient.reports.push({
-//       filename: req.file.originalname,
-//       path: req.file.path,
-//     });
-
-//     await patient.save();
-//     res.json({ report: patient.reports[patient.reports.length - 1] });
-//   } catch (err) {
-//     res.status(500).json({ message: "Error uploading report" });
-//   }
-// };
-
 const getChatLogs = async (req, res) => {
   try {
     const chatlogs = await chatModel
