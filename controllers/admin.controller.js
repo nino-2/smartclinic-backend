@@ -5,22 +5,26 @@ const chatModel = require("../models/chat.model");
 const appModel = require("../models/appointment.model");
 const activityModel = require("../models/activity.model");
 const { activityLogger } = require("../middleware/activityLogger");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 // Send email confirmation using nodemailer
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.GMAIL_USER,
+//     pass: process.env.GMAIL_PASS,
+//   },
+// });
 
 // Utility: Send Email
+
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const sendEmail = async (to, subject, text) => {
   try {
-    await transporter.sendMail({
-      from: `"Clinic Admin" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to,
       subject,
       text,

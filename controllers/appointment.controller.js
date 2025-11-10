@@ -1,5 +1,5 @@
 const appModel = require("../models/appointment.model");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const userModel = require("../models/user.model");
 
 //Book
@@ -40,22 +40,33 @@ const bookAppointment = async (req, res) => {
     });
 
     // Send email confirmation using nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.GMAIL_USER,
+    //     pass: process.env.GMAIL_PASS,
+    //   },
+    // });
 
-    await transporter.sendMail({
-      from: `"MAPOLY SmartClinic Assistant" <${process.env.GMAIL_USER}>`,
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "MAPOLY SmartClinic Assistant <mapolyclinic205@gmail.com>",
       to: user.email,
       subject: "Appointment Confirmation",
       text: `Dear ${user.firstname || ""} ${
         user.lastname || ""
       }, your appointment has been booked for ${date} at ${time}.`,
     });
+
+    // await transporter.sendMail({
+    //   from: `"MAPOLY SmartClinic Assistant" <${process.env.GMAIL_USER}>`,
+    //   to: user.email,
+    //   subject: "Appointment Confirmation",
+    //   text: `Dear ${user.firstname || ""} ${
+    //     user.lastname || ""
+    //   }, your appointment has been booked for ${date} at ${time}.`,
+    // });
 
     return res.status(201).json({
       status: true,
