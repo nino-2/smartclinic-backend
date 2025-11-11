@@ -5,7 +5,9 @@ const chatModel = require("../models/chat.model");
 const appModel = require("../models/appointment.model");
 const activityModel = require("../models/activity.model");
 const { activityLogger } = require("../middleware/activityLogger");
-const { Resend } = require("resend");
+const sgMail = require("@sendgrid/mail");
+
+sgMail.setApiKey(process.env.MAPOLY_SENDGRID_KEY);
 
 // Send email confirmation using nodemailer
 // const transporter = nodemailer.createTransport({
@@ -18,17 +20,16 @@ const { Resend } = require("resend");
 
 // Utility: Send Email
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const sendEmail = async (to, subject, text) => {
   try {
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
+    const msg = {
+      from: `Clinic Admin <${process.env.GMAIL_USER}>`,
       to,
       subject,
       text,
-    });
+    };
+    await sgMail.send(msg);
+    console.log("Email sent successfully");
   } catch (err) {
     console.error("Error sending email:", err.message);
   }
@@ -181,7 +182,7 @@ const updateAppointmentStatus = async (req, res) => {
 
     appointment.status = status;
     if (status === "rescheduled" && date && time) {
-      appointment.date = new Date(date);
+      appointment.date.toLocaleDateString;
 
       appointment.time = time;
     }

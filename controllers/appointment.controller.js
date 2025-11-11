@@ -1,6 +1,8 @@
 const appModel = require("../models/appointment.model");
-const { Resend } = require("resend");
 const userModel = require("../models/user.model");
+const sgMail = require("@sendgrid/mail");
+
+sgMail.setApiKey(process.env.MAPOLY_SENDGRID_KEY);
 
 //Book
 const bookAppointment = async (req, res) => {
@@ -48,25 +50,20 @@ const bookAppointment = async (req, res) => {
     //   },
     // });
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    await resend.emails.send({
-      from: "MAPOLY SmartClinic Assistant <mapolyclinic205@gmail.com>",
+    // Send Email Confirmation via SendGrid
+    const msg = {
       to: user.email,
+      from: {
+        name: "MAPOLY SmartClinic Assistant",
+        email: process.env.GMAIL_USER,
+      },
       subject: "Appointment Confirmation",
       text: `Dear ${user.firstname || ""} ${
         user.lastname || ""
       }, your appointment has been booked for ${date} at ${time}.`,
-    });
+    };
 
-    // await transporter.sendMail({
-    //   from: `"MAPOLY SmartClinic Assistant" <${process.env.GMAIL_USER}>`,
-    //   to: user.email,
-    //   subject: "Appointment Confirmation",
-    //   text: `Dear ${user.firstname || ""} ${
-    //     user.lastname || ""
-    //   }, your appointment has been booked for ${date} at ${time}.`,
-    // });
+    await sgMail.send(msg);
 
     return res.status(201).json({
       status: true,
